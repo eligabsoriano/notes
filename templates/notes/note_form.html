@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Note</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+    <p><a href="{% url 'note_list' %}">Back to Notes</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2>My Notes</h2>
+    <p><a href="{% url 'note_create' %}">Create New Note</a></p>
+    {% if notes %}
+        <ul>
+        {% for note in notes %}
+            <li>
+                <a href="{% url 'note_update' note.pk %}">{{ note.title }}</a>
+                <a href="{% url 'note_delete' note.pk %}">[Delete]</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No notes yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

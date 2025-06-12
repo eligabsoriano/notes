@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+db.sqlite3  # Exclude local database (others can recreate with migrations)
+*.log
+.DS_Store   # Exclude macOS metadata files
