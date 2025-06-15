@@ -19,9 +19,10 @@
 
 # How to run
 
-1. Active virtual environment (based kay grok lol idk why but okay):
+1. Active virtual environment:
     source venv/bin/activate  
 
     python3 manage.py runserver
 
-
+command + l to open agent macos
+ctrl + l to open agent on windows
