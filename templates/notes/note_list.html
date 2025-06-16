@@ -3,19 +3,66 @@
 
 {% block content %}
 <div class="container">
-    <h2>My Notes</h2>
-    <p><a href="{% url 'note_create' %}">Create New Note</a></p>
+    {# Dynamic title based on user role: "All Notes" for superusers, "My Notes" for regular users #}
+    <h2>{% if user.is_superuser %}All Notes{% else %}My Notes{% endif %}</h2>
+    
+    {# Filter buttons for superusers #}
+    {% if user.is_superuser %}
+    <div class="filter-buttons" style="margin-bottom: 20px;">
+        <a href="{% url 'note_list' %}" class="btn {% if filter_type == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">All Notes</a>
+        <a href="{% url 'note_list' %}?filter=superusers" class="btn {% if filter_type == 'superusers' %}btn-primary{% else %}btn-outline-primary{% endif %}">Admin Notes</a>
+        <a href="{% url 'note_list' %}?filter=regular_users" class="btn {% if filter_type == 'regular_users' %}btn-primary{% else %}btn-outline-primary{% endif %}">User Notes</a>
+    </div>
+    {% endif %}
+
+    <p><a href="{% url 'note_create' %}" class="btn btn-success">Create New Note</a></p>
+    
     {% if notes %}
-        <ul>
-        {% for note in notes %}
-            <li>
-                <a href="{% url 'note_update' note.pk %}">{{ note.title }}</a>
-                <a href="{% url 'note_delete' note.pk %}">[Delete]</a>
-            </li>
-        {% endfor %}
-        </ul>
+        <div class="notes-list">
+            {% for note in notes %}
+                <div class="note-item" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    {# Note title with link to update #}
+                    <h4 style="margin: 0;">
+                        <a href="{% url 'note_update' note.pk %}">{{ note.title }}</a>
+                    </h4>
+                    
+                    {# Show author information only for superusers #}
+                    {% if user.is_superuser %}
+                        <div class="author-info" style="color: #666; font-size: 0.9em;">
+                            Author: {{ note.author.username }}
+                            {% if note.author.is_superuser %}
+                                <span class="badge bg-primary">Admin</span>
+                            {% else %}
+                                <span class="badge bg-secondary">User</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    {# Delete link available for both superusers and note authors #}
+                    <div style="margin-top: 10px;">
+                        <a href="{% url 'note_delete' note.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
         <p>No notes yet.</p>
     {% endif %}
 </div>
+
+<style>
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    .note-item {
+        transition: all 0.3s ease;
+    }
+    .note-item:hover {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .badge {
+        margin-left: 5px;
+    }
+</style>
 {% endblock %}
